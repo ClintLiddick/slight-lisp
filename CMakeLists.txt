@@ -1,11 +1,35 @@
 cmake_minimum_required (VERSION 2.8.12)
 
-project (SLIGHT_LISP)
+project(slight_lisp)
 
-SET( PROJ_SOURCES   "src/prompt.c" "src/mpc.c" )
-SET( PROJ_LIBRARIES "edit" "m" )
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake")
+option(SLIGHTLISP_BUILD_TEST "build unit tests" ON)
 
-INCLUDE_DIRECTORIES( "include" )
-ADD_EXECUTABLE(prompt ${PROJ_SOURCES})
-TARGET_LINK_LIBRARIES( prompt ${PROJ_LIBRARIES} )
-TARGET_COMPILE_OPTIONS(prompt PUBLIC -std=c99 -Wall)
+
+include(CheckCXXCompilerFlag)
+CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
+if(COMPILER_SUPPORTS_CXX11)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+else()
+  message(FATAL_ERROR
+    "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
+endif()
+
+include_directories(include)
+
+if(SLIGHTLISP_BUILD_TESTS)
+  include(ExternalProject)
+  set_directory_properties(PROPERTIES EP_PREFIX ${CMAKE_BINARY_DIR}/third_party)
+
+  include(External_GTest)
+  enable_testing()
+  # find_package(GTest REQUIRED)
+  include_directories(${GTEST_INCLUDE_DIRS})
+  message(WARNING "CLINT: ${GTEST_INCLUDE_DIRS}")
+  message(WARNING "CLINT: ${GTEST_LIBRARY_PATH}")
+  message(WARNING "CLINT: ${GTEST_MAIN_LIBRARY_PATH}")
+
+  add_executable(test_parser "tests/test_parser.cpp")
+  target_link_libraries(test_parser ${GTEST_LIBRARY} ${GTEST_MAIN_LIBRARY})
+  add_test(ParserTests test_parser)
+endif()
