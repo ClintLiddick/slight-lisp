@@ -23,19 +23,17 @@ if(SLIGHTLISP_BUILD_TESTS)
 
   include(External_GMock)
   enable_testing()
-  # find_package(GTest REQUIRED)
   include_directories(${GTEST_INCLUDE_DIRS})
   include_directories(${GMOCK_INCLUDE_DIRS})
-  # message(WARNING "CLINT: ${GTEST_INCLUDE_DIRS}")
-  # message(WARNING "CLINT: ${GTEST_LIBRARY_PATH}")
-  # message(WARNING "CLINT: ${GTEST_MAIN_LIBRARY_PATH}")
-  # message(WARNING "CLINT: ${GMOCK_INCLUDE_DIRS}")
-  # message(WARNING "CLINT: ${GMOCK_LIBRARY_PATH}")
-  # message(WARNING "CLINT: ${GMOCK_MAIN_LIBRARY_PATH}")
 
   add_executable(test_parser "tests/test_parser.cpp")
   target_link_libraries(test_parser
-    ${GTEST_LIBRARY} ${GTEST_MAIN_LIBRARY}
-    ${GMOCK_LIBRARY} ${GMOCK_MAIN_LIBRARY})
+    ${GMOCK_MAIN_LIBRARY})
   add_test(ParserTests test_parser)
+
+  add_executable(test_types "tests/test_types.cpp")
+  target_link_libraries(test_types
+    ${GMOCK_MAIN_LIBRARY}
+    )
+  add_test(ParserTests test_types)
 endif()
