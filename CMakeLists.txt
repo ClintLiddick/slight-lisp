@@ -7,8 +7,8 @@ option(SLIGHTLISP_BUILD_TEST "build unit tests" ON)
 
 
 include(CheckCXXCompilerFlag)
-CHECK_CXX_COMPILER_FLAG("-std=c++14" COMPILER_SUPPORTS_CXX11)
-if(COMPILER_SUPPORTS_CXX11)
+CHECK_CXX_COMPILER_FLAG("-std=c++14" COMPILER_SUPPORTS_CXX14)
+if(COMPILER_SUPPORTS_CXX14)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 else()
   message(FATAL_ERROR
@@ -35,5 +35,5 @@ if(SLIGHTLISP_BUILD_TESTS)
   target_link_libraries(test_types
     ${GMOCK_MAIN_LIBRARY}
     )
-  add_test(ParserTests test_types)
+  add_test(TypeTests test_types)
 endif()
