@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <exception>
 #include <memory>
+#include <sstream>
 #include <string>
 #include <vector>
 
@@ -97,6 +98,31 @@ struct Type {
     }
   }
 
+  std::string to_string() const
+  {
+    std::stringstream ss;
+
+    switch (tag) {
+      case Type::NUMERIC:
+        ss << num;
+        return ss.str();
+      case Type::SYMBOL:
+        ss << symbol;
+        return ss.str();
+      case Type::LIST:
+        ss << "(";
+        for (auto i = list.begin(); i != list.end();) {
+          ss << (**i).to_string();
+          ++i;
+          if (i != list.end()) {
+            ss << " ";
+          }
+        }
+        ss << ")";
+        return ss.str();
+    }
+  }
+
   bool operator!=(const Type &other) const { return !(*this == other); }
 
   friend std::ostream &operator<<(std::ostream &os, const Type &type);
@@ -104,19 +130,7 @@ struct Type {
 
 std::ostream &operator<<(::std::ostream &os, const Type &type)
 {
-  switch (type.tag) {
-    case Type::NUMERIC:
-      os << type.num;
-    case Type::SYMBOL:
-      os << type.symbol;
-    case Type::LIST:
-      os << "[ ";
-      for (auto &t : type.list) {
-        os << *t << " ";
-      }
-      os << "]";
-  }
-  return os;
+  return os << type.to_string();
 }
 
 // using List = std::vector<std::unique_ptr<Type>>;
