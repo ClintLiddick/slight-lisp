@@ -8,7 +8,8 @@
 #include <string>
 #include <vector>
 
-#include <slightlisp/types.hpp>
+#include <slightlisp/syntax_exception.hpp>
+#include <slightlisp/value.hpp>
 
 namespace slightlisp
 {
@@ -50,29 +51,29 @@ inline bool is_zero_value(string token)
   }
 }
 
-TypePtr parse_token(string token)
+ValuePtr parse_token(string token)
 {
   Numeric n = std::atof(token.c_str());
   if (n == 0) {
     // determine if the value actually was zero
     // or was just unable to be parsed
     if (is_zero_value(token)) {
-      return std::move(std::make_unique<Type>(n));
+      return std::move(std::make_unique<Value>(n));
     } else {
-      return std::move(std::make_unique<Type>(token));
+      return std::move(std::make_unique<Value>(token));
     }
   }
-  return std::move(std::make_unique<Type>(n));
+  return std::move(std::make_unique<Value>(n));
 }
 
-TypePtr parse(std::vector<string>& tokens)
+ValuePtr parse(std::vector<string>& tokens)
 {
   string token = tokens[tokens.size() - 1];
   tokens.pop_back();
 
   // parse list
   if (token == "(") {
-    TypePtr list = std::make_unique<Type>();
+    ValuePtr list = std::make_unique<Value>();
     while (tokens[tokens.size() - 1] != ")") {
       list->list.push_back(parse(tokens));
     }
@@ -91,7 +92,7 @@ TypePtr parse(std::vector<string>& tokens)
 
 }  // detail
 
-TypePtr parse(std::vector<string>& tokens)
+ValuePtr parse(std::vector<string>& tokens)
 {
   if (tokens.size() == 0) {
     throw syntax_exception{syntax_exception::EMPTY_EXPRESSION};

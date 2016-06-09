@@ -1,9 +1,7 @@
+#include <slightlisp/parser.hpp>
+
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-
-#include <stack>
-#include <slightlisp/parser.hpp>
-#include <slightlisp/types.hpp>
 
 using namespace slightlisp;
 
@@ -126,75 +124,75 @@ TEST(ParseTests, Empty)
 TEST(ParseTests, NoParens)
 {
   auto tokens = tokenize("1");
-  TypePtr parsed = parse(tokens);
-  TypePtr one = std::make_unique<Type>(1);
+  ValuePtr parsed = parse(tokens);
+  ValuePtr one = std::make_unique<Value>(1);
   ASSERT_EQ(*parsed, *one);
 }
 
 TEST(ParseTests, EmptyList)
 {
   auto tokens = tokenize("()");
-  TypePtr parsed = parse(tokens);
-  Type list;
+  ValuePtr parsed = parse(tokens);
+  Value list;
   ASSERT_EQ(*parsed, list);
 }
 
 TEST(ParseTests, ListOfIntNumerics)
 {
   auto tokens = tokenize("(1 2 3)");
-  Type list;
-  list.list.push_back(std::make_unique<Type>(1));
-  list.list.push_back(std::make_unique<Type>(2));
-  list.list.push_back(std::make_unique<Type>(3));
-  TypePtr parsed = parse(tokens);
+  Value list;
+  list.list.push_back(std::make_unique<Value>(1));
+  list.list.push_back(std::make_unique<Value>(2));
+  list.list.push_back(std::make_unique<Value>(3));
+  ValuePtr parsed = parse(tokens);
   ASSERT_EQ(*parsed, list);
 }
 
 TEST(ParseTests, ListOfFloatNumerics)
 {
   auto tokens = tokenize("(1.0 2.0 3.0)");
-  Type list;
-  list.list.push_back(std::make_unique<Type>(1.0));
-  list.list.push_back(std::make_unique<Type>(2.0));
-  list.list.push_back(std::make_unique<Type>(3.0));
-  TypePtr parsed = parse(tokens);
+  Value list;
+  list.list.push_back(std::make_unique<Value>(1.0));
+  list.list.push_back(std::make_unique<Value>(2.0));
+  list.list.push_back(std::make_unique<Value>(3.0));
+  ValuePtr parsed = parse(tokens);
   ASSERT_EQ(*parsed, list);
 }
 
 TEST(ParseTests, Zero)
 {
   auto tokens = tokenize("0.0");
-  Type zero{0};
-  TypePtr parsed = parse(tokens);
+  Value zero{0};
+  ValuePtr parsed = parse(tokens);
   ASSERT_EQ(*parsed, zero);
 }
 
 TEST(ParseTests, DISABLED_LongZeroString)
 {
   auto tokens = tokenize("00");
-  Type zero{0};
-  TypePtr parsed = parse(tokens);
+  Value zero{0};
+  ValuePtr parsed = parse(tokens);
   ASSERT_EQ(*parsed, zero) << "This is a documented deficiency in the parser";
 }
 
 TEST(ParseTests, ListOfSymbols)
 {
   auto tokens = tokenize("(first second third)");
-  Type list;
-  list.list.push_back(std::make_unique<Type>("first"));
-  list.list.push_back(std::make_unique<Type>("second"));
-  list.list.push_back(std::make_unique<Type>("third"));
-  TypePtr parsed = parse(tokens);
+  Value list;
+  list.list.push_back(std::make_unique<Value>("first"));
+  list.list.push_back(std::make_unique<Value>("second"));
+  list.list.push_back(std::make_unique<Value>("third"));
+  ValuePtr parsed = parse(tokens);
   ASSERT_EQ(*parsed, list);
 }
 
 TEST(ParseTests, NestedLists)
 {
   auto tokens = tokenize("(first (second))");
-  Type outer_list, inner_list;
-  outer_list.list.push_back(std::make_unique<Type>("first"));
-  inner_list.list.push_back(std::make_unique<Type>("second"));
-  outer_list.list.push_back(std::make_unique<Type>(std::move(inner_list)));
-  TypePtr parsed = parse(tokens);
+  Value outer_list, inner_list;
+  outer_list.list.push_back(std::make_unique<Value>("first"));
+  inner_list.list.push_back(std::make_unique<Value>("second"));
+  outer_list.list.push_back(std::make_unique<Value>(std::move(inner_list)));
+  ValuePtr parsed = parse(tokens);
   ASSERT_EQ(*parsed, outer_list);
 }
