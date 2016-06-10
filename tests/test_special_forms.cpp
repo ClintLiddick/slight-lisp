@@ -14,14 +14,14 @@ TEST(AddTests, Valid)
   list.push_back(make_unique<Value>(1));
   list.push_back(make_unique<Value>(2));
   ValuePtr v = make_unique<Value>(3);
-  ASSERT_EQ(*addValues(std::move(list)), *v);
+  ASSERT_EQ(*add(std::move(list)), *v);
 }
 
 TEST(AddTests, NotEnoughArgs)
 {
   List list;
   list.push_back(make_unique<Value>(1));
-  ASSERT_THROW(addValues(std::move(list)), std::invalid_argument);
+  ASSERT_THROW(add(std::move(list)), std::invalid_argument);
 }
 
 TEST(AddTests, TooManyArgs)
@@ -30,7 +30,7 @@ TEST(AddTests, TooManyArgs)
   list.push_back(make_unique<Value>(1));
   list.push_back(make_unique<Value>(1));
   list.push_back(make_unique<Value>(1));
-  ASSERT_THROW(addValues(std::move(list)), std::invalid_argument);
+  ASSERT_THROW(add(std::move(list)), std::invalid_argument);
 }
 
 TEST(AddTests, NonNumericArg)
@@ -38,5 +38,5 @@ TEST(AddTests, NonNumericArg)
   List list;
   list.push_back(make_unique<Value>(1));
   list.push_back(make_unique<Value>(""));
-  ASSERT_THROW(addValues(std::move(list)), std::invalid_argument);
+  ASSERT_THROW(add(std::move(list)), std::invalid_argument);
 }

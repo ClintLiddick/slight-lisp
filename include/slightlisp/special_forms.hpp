@@ -5,7 +5,8 @@
 
 namespace slightlisp
 {
-ValuePtr addValues(List &&args);
+ValuePtr add(List &&args);
+ValuePtr sub(List &&args);
 }
 
 #endif  // SLIGHTLISP_SPECIAL_FORMS_HPP

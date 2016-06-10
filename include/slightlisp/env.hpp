@@ -19,7 +19,7 @@ using EnvPtr = std::shared_ptr<Env>;
 Env global_env()
 {
   Env env;
-  env["+"] = addValues;
+  env["+"] = add;
 
   return std::move(env);
 }

@@ -44,4 +44,5 @@ struct Value {
 };
 
 }  // ns
+
 #endif  // SLIGHTLISP_VALUE_HPP

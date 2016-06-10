@@ -15,7 +15,7 @@ public:
   }
 };
 
-TEST_F(EvalTests, Add)
+TEST_F(EvalTests, AddFn)
 {
   List args;
   args.push_back(std::make_unique<Value>(1));
@@ -47,4 +47,42 @@ TEST_F(EvalTests, ReturnNumeric)
   ValuePtr expr = std::make_unique<Value>(1);
   Numeric n{1};
   ASSERT_EQ(eval(std::move(expr), env)->num, n);
+}
+
+TEST_F(EvalTests, FnNoArgs)
+{
+  (*env)["ret1"] = [](List &&args) -> ValuePtr {
+    return std::move(std::make_unique<Value>(1));
+  };
+  ValuePtr expr = std::make_unique<Value>();
+  expr->list.push_back(std::make_unique<Value>("ret1"));
+  Numeric n{1};
+  ASSERT_EQ(eval(std::move(expr), env)->num, n);
+}
+
+TEST_F(EvalTests, RecurseLists)
+{
+  // (+ 1 (+ 2 5)) => 8
+  List sub_expr;
+  sub_expr.push_back(std::make_unique<Value>("+"));
+  sub_expr.push_back(std::make_unique<Value>(2));
+  sub_expr.push_back(std::make_unique<Value>(5));
+
+  ValuePtr expr = std::make_unique<Value>();
+  expr->list.push_back(std::make_unique<Value>("+"));
+  expr->list.push_back(std::make_unique<Value>(1));
+  expr->list.push_back(std::make_unique<Value>(std::move(sub_expr)));
+
+  std::cout << expr->to_string() << std::endl;
+  Numeric n{8};
+  ASSERT_EQ(eval(std::move(expr), env)->num, n);
+}
+
+TEST_F(EvalTests, EvalAdd)
+{
+  ValuePtr expr = std::make_unique<Value>();
+  expr->list.push_back(std::make_unique<Value>("+"));
+  expr->list.push_back(std::make_unique<Value>(1));
+  expr->list.push_back(std::make_unique<Value>(2));
+  ASSERT_EQ(*eval(std::move(expr), env), Value{3});
 }
