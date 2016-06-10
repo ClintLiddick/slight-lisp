@@ -7,34 +7,36 @@ using namespace slightlisp;
 // default construct creates a list type
 Value::Value()
     : tag{LIST}
-    , num{}
-    , symbol{}
-    , list{}
 {
 }
 
 Value::Value(Numeric num)
     : tag{NUMERIC}
     , num{num}
-    , symbol{}
-    , list{}
 {
 }
 
 Value::Value(Symbol symbol)
     : tag{SYMBOL}
-    , num{}
     , symbol{symbol}
-    , list{}
 {
 }
 
 Value::Value(List &&other_list)
     : tag{LIST}
-    , num{}
-    , symbol{}
     , list{std::move(other_list)}
 {
+}
+
+Value::Value(bool boolean, Value::TYPE bool_tag)
+    : tag{bool_tag}
+    , boolean{boolean}
+{
+  if (bool_tag != Value::BOOL) {
+    throw std::invalid_argument{
+        "Value(bool, Value::TYPE) constructor is only for construtcing BOOL "
+        "Values"};
+  }
 }
 
 // movable
@@ -42,6 +44,7 @@ Value::Value(Value &&other)
     : tag{other.tag}
     , num{other.num}
     , symbol{other.symbol}
+    , boolean{other.boolean}
     , list{std::move(other.list)}
 {
 }
@@ -52,6 +55,7 @@ Value &Value::operator=(Value &&other)
   num = other.num;
   symbol = other.symbol;
   list = std::move(other.list);
+  boolean = other.boolean;
   return *this;
 }
 
@@ -74,6 +78,8 @@ bool Value::operator==(const Value &other) const
           }
           return true;
         }
+      case BOOL:
+        return boolean == other.boolean;
     }
   } else {
     return false;
@@ -102,6 +108,9 @@ std::string Value::to_string() const
       }
       ss << ")";
       return ss.str();
+  case Value::BOOL:
+    ss << std::boolalpha << boolean;
+    return ss.str();
   }
 }
 

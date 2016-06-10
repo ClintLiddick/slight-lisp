@@ -60,6 +60,7 @@ ValuePtr parse_token(string token)
     if (is_zero_value(token)) {
       return std::move(std::make_unique<Value>(n));
     } else {
+      // TODO parse #t, #f true/false
       return std::move(std::make_unique<Value>(token));
     }
   }

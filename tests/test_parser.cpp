@@ -71,6 +71,13 @@ TEST(TokenizeTests, OneToken)
   ASSERT_THAT(tokenize("blah"), ContainerEq(tokens));
 }
 
+TEST(TokenizeTests, OneTokenTrimmed)
+{
+  std::vector<std::string> tokens;
+  tokens.push_back("a");
+  ASSERT_THAT(tokenize(" a "), ContainerEq(tokens));
+}
+
 TEST(TokenizeTests, TwoTokens)
 {
   std::vector<std::string> tokens;

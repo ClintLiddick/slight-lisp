@@ -59,6 +59,12 @@ TEST(ValueTests, EmptyListToString)
   ASSERT_EQ(t.to_string(), "()");
 }
 
+TEST(ValueTests, BoolToString)
+{
+  Value b{true, Value::BOOL};
+  ASSERT_EQ(b.to_string(), "true");
+}
+
 TEST(ValueTests, SingleItemString)
 {
   Value t;

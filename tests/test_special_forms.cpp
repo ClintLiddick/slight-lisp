@@ -40,3 +40,12 @@ TEST(AddTests, NonNumericArg)
   list.push_back(make_unique<Value>(""));
   ASSERT_THROW(add(std::move(list)), std::invalid_argument);
 }
+
+TEST(GreaterThanTests, True)
+{
+  List list;
+  list.push_back(make_unique<Value>(2));
+  list.push_back(make_unique<Value>(1));
+  Value true_val{true, Value::BOOL};
+  ASSERT_EQ(*gt(std::move(list)), true_val);
+}

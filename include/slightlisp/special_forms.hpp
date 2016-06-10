@@ -7,6 +7,7 @@ namespace slightlisp
 {
 ValuePtr add(List &&args);
 ValuePtr sub(List &&args);
+ValuePtr gt(List &&args);
 }
 
 #endif  // SLIGHTLISP_SPECIAL_FORMS_HPP

@@ -8,6 +8,7 @@ Env global_env()
 {
   Env env;
   env["+"] = add;
+  env[">"] = gt;
 
   return std::move(env);
 }

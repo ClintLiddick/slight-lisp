@@ -74,7 +74,6 @@ TEST_F(EvalTests, RecurseLists)
   expr->list.push_back(std::make_unique<Value>(1));
   expr->list.push_back(std::make_unique<Value>(std::move(sub_expr)));
 
-  std::cout << expr->to_string() << std::endl;
   Numeric n{8};
   ASSERT_EQ(eval(std::move(expr), env)->num, n);
 }
@@ -86,4 +85,66 @@ TEST_F(EvalTests, EvalAdd)
   expr->list.push_back(std::make_unique<Value>(1));
   expr->list.push_back(std::make_unique<Value>(2));
   ASSERT_EQ(*eval(std::move(expr), env), Value{3});
+}
+
+TEST_F(EvalTests, IfTrue)
+{
+  // (if (> 2 1) "greater" "lesser")
+  List cond_expr;
+  cond_expr.push_back(std::make_unique<Value>(">"));
+  cond_expr.push_back(std::make_unique<Value>(2));
+  cond_expr.push_back(std::make_unique<Value>(1));
+
+  ValuePtr expr = std::make_unique<Value>();
+  expr->list.push_back(std::make_unique<Value>("if"));
+  expr->list.push_back(std::make_unique<Value>(std::move(cond_expr)));
+  expr->list.push_back(std::make_unique<Value>("greater"));
+  expr->list.push_back(std::make_unique<Value>("lesser"));
+
+  ASSERT_EQ(eval(std::move(expr), env)->symbol, "greater");
+}
+
+TEST_F(EvalTests, IfFalse)
+{
+  // (if (> 1 2) "greater" "lesser")
+  List cond_expr;
+  cond_expr.push_back(std::make_unique<Value>(">"));
+  cond_expr.push_back(std::make_unique<Value>(1));
+  cond_expr.push_back(std::make_unique<Value>(2));
+
+  ValuePtr expr = std::make_unique<Value>();
+  expr->list.push_back(std::make_unique<Value>("if"));
+  expr->list.push_back(std::make_unique<Value>(std::move(cond_expr)));
+  expr->list.push_back(std::make_unique<Value>("greater"));
+  expr->list.push_back(std::make_unique<Value>("lesser"));
+
+  ASSERT_EQ(eval(std::move(expr), env)->symbol, "lesser");
+}
+
+TEST_F(EvalTests, IfNoElse)
+{
+  // (if (> 1 2) "greater" "lesser")
+  List cond_expr;
+  cond_expr.push_back(std::make_unique<Value>(">"));
+  cond_expr.push_back(std::make_unique<Value>(1));
+  cond_expr.push_back(std::make_unique<Value>(2));
+
+  ValuePtr expr = std::make_unique<Value>();
+  expr->list.push_back(std::make_unique<Value>("if"));
+  expr->list.push_back(std::make_unique<Value>(std::move(cond_expr)));
+  expr->list.push_back(std::make_unique<Value>("greater"));
+
+  ASSERT_THROW(eval(std::move(expr), env), syntax_exception);
+}
+
+TEST_F(EvalTests, IfAnyValueTruthy)
+{
+  // (if "" "truthy" "falsey")
+  ValuePtr expr = std::make_unique<Value>();
+  expr->list.push_back(std::make_unique<Value>("if"));
+  expr->list.push_back(std::make_unique<Value>(""));
+  expr->list.push_back(std::make_unique<Value>("truthy"));
+  expr->list.push_back(std::make_unique<Value>("falsey"));
+
+  ASSERT_EQ(eval(std::move(expr), env)->symbol, "truthy");
 }

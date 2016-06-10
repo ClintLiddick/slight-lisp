@@ -15,16 +15,18 @@ using Symbol = std::string;
 using List = std::vector<ValuePtr>;
 
 struct Value {
-  enum TYPE { NUMERIC, SYMBOL, LIST } tag;
+  enum TYPE { NUMERIC, SYMBOL, LIST, BOOL } tag;
   Numeric num;
   Symbol symbol;
   List list;
+  bool boolean;
 
   // default construct creates a list type
   Value();
   explicit Value(Numeric num);
   explicit Value(Symbol symbol);
   explicit Value(List &&other_list);
+  Value(bool boolean, Value::TYPE);
 
   // non-copyable
   Value(const Value &other) = delete;
