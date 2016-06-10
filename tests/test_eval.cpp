@@ -1,4 +1,5 @@
 #include <slightlisp/eval.hpp>
+#include <slightlisp/syntax_exception.hpp>
 
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>

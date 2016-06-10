@@ -18,8 +18,10 @@ endif()
 include_directories(include)
 
 add_library(slightlisp
-  "src/value.cpp"
+  "src/env.cpp"
+  "src/eval.cpp"
   "src/special_forms.cpp"
+  "src/value.cpp"
 )
 
 if(SLIGHTLISP_BUILD_TESTS)

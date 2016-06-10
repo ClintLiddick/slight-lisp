@@ -4,8 +4,6 @@
 #include <functional>
 #include <map>
 #include <memory>
-
-#include <slightlisp/special_forms.hpp>
 #include <slightlisp/value.hpp>
 
 namespace slightlisp
@@ -16,13 +14,8 @@ namespace slightlisp
 using Env = std::map<Symbol, std::function<ValuePtr(List&&)>>;
 using EnvPtr = std::shared_ptr<Env>;
 
-Env global_env()
-{
-  Env env;
-  env["+"] = add;
+Env global_env();
 
-  return std::move(env);
-}
 }  // ns
 
 #endif  // SLIGHTLISP_ENV_HPP
