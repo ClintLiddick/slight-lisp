@@ -93,7 +93,7 @@ ValuePtr parse(std::vector<string>& tokens)
 
 }  // detail
 
-ValuePtr parse(std::vector<string>& tokens)
+ValuePtr parse(std::vector<string>&& tokens)
 {
   if (tokens.size() == 0) {
     throw syntax_exception{syntax_exception::EMPTY_EXPRESSION};

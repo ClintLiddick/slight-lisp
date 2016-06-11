@@ -15,7 +15,14 @@ else()
     "The compiler ${CMAKE_CXX_COMPILER} has no C++14 support. Please use a different C++ compiler.")
 endif()
 
-include_directories(include)
+include(ExternalProject)
+set_directory_properties(PROPERTIES EP_PREFIX ${CMAKE_BINARY_DIR}/third_party)
+include(External_editline)
+
+include_directories(
+  include
+  ${EDITLINE_INCLUDE_DIRS}
+)
 
 add_library(slightlisp
   "src/env.cpp"
@@ -24,10 +31,14 @@ add_library(slightlisp
   "src/value.cpp"
 )
 
-if(SLIGHTLISP_BUILD_TESTS)
-  include(ExternalProject)
-  set_directory_properties(PROPERTIES EP_PREFIX ${CMAKE_BINARY_DIR}/third_party)
+add_executable(slightlisp-repl
+  "src/repl.cpp")
 
+target_link_libraries(slightlisp-repl
+  slightlisp
+  ${EDITLINE_LIBRARY})
+
+if(SLIGHTLISP_BUILD_TESTS)
   include(External_GMock)
   enable_testing()
   include_directories(${GTEST_INCLUDE_DIRS})

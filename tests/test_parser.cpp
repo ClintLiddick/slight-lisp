@@ -124,72 +124,71 @@ TEST(TokenizeTests, FloatingPointTokens)
 
 TEST(ParseTests, Empty)
 {
-  auto tokens = tokenize("");
-  ASSERT_THROW(parse(tokens), syntax_exception);
+  ASSERT_THROW(parse(tokenize("")), syntax_exception);
 }
 
 TEST(ParseTests, NoParens)
 {
-  auto tokens = tokenize("1");
-  ValuePtr parsed = parse(tokens);
+  // auto tokens = tokenize("1");
+  ValuePtr parsed = parse(tokenize("1"));
   ValuePtr one = std::make_unique<Value>(1);
   ASSERT_EQ(*parsed, *one);
 }
 
 TEST(ParseTests, EmptyList)
 {
-  auto tokens = tokenize("()");
-  ValuePtr parsed = parse(tokens);
+  // auto tokens = tokenize("()");
+  ValuePtr parsed = parse(tokenize("()"));
   Value list;
   ASSERT_EQ(*parsed, list);
 }
 
 TEST(ParseTests, ListOfIntNumerics)
 {
-  auto tokens = tokenize("(1 2 3)");
+  // auto tokens = tokenize("(1 2 3)");
   Value list;
   list.list.push_back(std::make_unique<Value>(1));
   list.list.push_back(std::make_unique<Value>(2));
   list.list.push_back(std::make_unique<Value>(3));
-  ValuePtr parsed = parse(tokens);
+  ValuePtr parsed = parse(tokenize("(1 2 3)"));
   ASSERT_EQ(*parsed, list);
 }
 
 TEST(ParseTests, ListOfFloatNumerics)
 {
-  auto tokens = tokenize("(1.0 2.0 3.0)");
+  // auto tokens = tokenize("(1.0 2.0 3.0)");
   Value list;
   list.list.push_back(std::make_unique<Value>(1.0));
   list.list.push_back(std::make_unique<Value>(2.0));
   list.list.push_back(std::make_unique<Value>(3.0));
-  ValuePtr parsed = parse(tokens);
+  ValuePtr parsed = parse(tokenize("(1.0 2.0 3.0)"));
   ASSERT_EQ(*parsed, list);
 }
 
 TEST(ParseTests, Zero)
 {
-  auto tokens = tokenize("0.0");
+  // auto tokens = tokenize("0.0");
   Value zero{0};
-  ValuePtr parsed = parse(tokens);
+  ValuePtr parsed = parse(tokenize("0.0"));
   ASSERT_EQ(*parsed, zero);
 }
 
 TEST(ParseTests, DISABLED_LongZeroString)
 {
-  auto tokens = tokenize("00");
+  // auto tokens = tokenize("00");
   Value zero{0};
-  ValuePtr parsed = parse(tokens);
+  ValuePtr parsed = parse(tokenize("00"));
   ASSERT_EQ(*parsed, zero) << "This is a documented deficiency in the parser";
 }
 
 TEST(ParseTests, ListOfSymbols)
 {
-  auto tokens = tokenize("(first second third)");
+  // auto tokens = tokenize("(first second third)");
   Value list;
   list.list.push_back(std::make_unique<Value>("first"));
   list.list.push_back(std::make_unique<Value>("second"));
   list.list.push_back(std::make_unique<Value>("third"));
-  ValuePtr parsed = parse(tokens);
+  ValuePtr parsed = parse(tokenize("(first second third)"));
   ASSERT_EQ(*parsed, list);
 }
 
@@ -200,6 +199,6 @@ TEST(ParseTests, NestedLists)
   outer_list.list.push_back(std::make_unique<Value>("first"));
   inner_list.list.push_back(std::make_unique<Value>("second"));
   outer_list.list.push_back(std::make_unique<Value>(std::move(inner_list)));
-  ValuePtr parsed = parse(tokens);
+  ValuePtr parsed = parse(tokenize("(first (second))"));
   ASSERT_EQ(*parsed, outer_list);
 }
