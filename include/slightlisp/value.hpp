@@ -37,10 +37,14 @@ struct Value {
   Value &operator=(Value &&other);
 
   bool operator==(const Value &other) const;
+  bool operator!=(const Value &other) const;
+  bool operator<(const Value &other) const;
+  bool operator>(const Value &other) const;
+  bool operator<=(const Value &other) const;
+  bool operator>=(const Value &other) const;
 
   std::string to_string() const;
 
-  bool operator!=(const Value &other) const;
 
   std::ostream &operator<<(::std::ostream &os) const;
 };

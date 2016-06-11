@@ -12,6 +12,7 @@ int main(int argc, char** argv)
   EnvPtr env = std::make_unique<Env>(global_env());
   char *p;
   while ((p = readline("> ")) != NULL) {
+    // TODO try catch exceptions
     std::string expr{p};
     std::cout << eval(parse(tokenize(expr)), env)->to_string() << std::endl;
     delete[] p;

@@ -49,3 +49,12 @@ TEST(GreaterThanTests, True)
   Value true_val{true, Value::BOOL};
   ASSERT_EQ(*gt(std::move(list)), true_val);
 }
+
+TEST(GreaterThanTests, False)
+{
+  List list;
+  list.push_back(make_unique<Value>(1));
+  list.push_back(make_unique<Value>(2));
+  Value false_val{false, Value::BOOL};
+  ASSERT_EQ(*gt(std::move(list)), false_val);
+}

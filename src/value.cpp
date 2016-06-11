@@ -86,6 +86,36 @@ bool Value::operator==(const Value &other) const
   }
 }
 
+bool Value::operator!=(const Value &other) const { return !(*this == other); }
+
+bool Value::operator<(const Value &other) const
+{
+  if (tag != other.tag) {
+    throw std::invalid_argument{"comparison of different types"};
+  }
+  switch (tag) {
+    case NUMERIC:
+      std::cerr << "num <" << std::endl;
+      return num < other.num;
+    case SYMBOL:
+      std::cerr << "sym <" << std::endl;
+      return symbol < other.symbol;
+    case LIST:
+      // TODO fix
+      std::cerr << "list < other" << std::endl;
+      return list < other.list;
+    case BOOL:
+      std::cerr << "bool <" << std::endl;
+      return boolean < other.boolean;
+  }
+}
+
+bool Value::operator>(const Value &other) const { return (other < *this); }
+
+bool Value::operator<=(const Value &other) const { return !(other < *this); }
+
+bool Value::operator>=(const Value &other) const { return !(*this < other); }
+
 std::string Value::to_string() const
 {
   std::stringstream ss;
@@ -108,13 +138,11 @@ std::string Value::to_string() const
       }
       ss << ")";
       return ss.str();
-  case Value::BOOL:
-    ss << std::boolalpha << boolean;
-    return ss.str();
+    case Value::BOOL:
+      ss << std::boolalpha << boolean;
+      return ss.str();
   }
 }
-
-bool Value::operator!=(const Value &other) const { return !(*this == other); }
 
 std::ostream &Value::operator<<(::std::ostream &os) const
 {

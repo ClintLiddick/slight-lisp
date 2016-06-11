@@ -55,14 +55,14 @@ if(SLIGHTLISP_BUILD_TESTS)
     slightlisp
     ${GMOCK_MAIN_LIBRARY}
     )
-  add_test(TypeValue test_value)
+  add_test(ValueTests test_value)
 
   add_executable(test_env "tests/test_env.cpp")
   target_link_libraries(test_env
     slightlisp
     ${GMOCK_MAIN_LIBRARY}
     )
-  add_test(TypeTests test_env)
+  add_test(EnvTests test_env)
   
   add_executable(test_special_forms "tests/test_special_forms.cpp")
   target_link_libraries(test_special_forms
@@ -76,5 +76,5 @@ if(SLIGHTLISP_BUILD_TESTS)
     slightlisp
     ${GMOCK_MAIN_LIBRARY}
     )
-  add_test(TypeTests test_eval)
+  add_test(EvalTests test_eval)
 endif()

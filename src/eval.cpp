@@ -64,7 +64,6 @@ inline ValuePtr eval_list(ValuePtr expr, EnvPtr env)
 
 inline ValuePtr eval_if(ValuePtr expr, EnvPtr env)
 {
-  std::cerr << "if: " << expr->to_string() << std::endl;
   if (expr->list.size() == 0) {
     throw syntax_exception{syntax_exception::UNEXPECTED_PARENS};
   }
