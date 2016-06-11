@@ -148,3 +148,20 @@ TEST_F(EvalTests, IfAnyValueTruthy)
 
   ASSERT_EQ(eval(std::move(expr), env)->symbol, "truthy");
 }
+
+TEST_F(EvalTests, QuoteList)
+{
+  // (quote (1 1)) => (1 1)
+  ValuePtr quoted = std::make_unique<Value>();
+  quoted->list.push_back(std::make_unique<Value>(1));
+  quoted->list.push_back(std::make_unique<Value>(1));
+
+  ValuePtr expr = std::make_unique<Value>();
+  expr->list.push_back(std::make_unique<Value>("quote"));
+  expr->list.push_back(std::move(quoted));
+
+  Value list;
+  list.list.push_back(std::make_unique<Value>(1));
+  list.list.push_back(std::make_unique<Value>(1));
+  ASSERT_EQ(*eval(std::move(expr), env), list);
+}

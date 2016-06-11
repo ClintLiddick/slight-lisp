@@ -164,7 +164,6 @@ ValuePtr cdr(List &&args)
   auto list_end = std::make_move_iterator(args[0]->list.end());
   List tail{list_it, list_end};
 
-
   return std::make_unique<Value>(std::move(tail));
 }
 

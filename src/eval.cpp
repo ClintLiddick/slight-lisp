@@ -31,7 +31,8 @@ inline ValuePtr eval_list(ValuePtr expr, EnvPtr env)
 
   ValuePtr proc = eval(std::move(expr->list[0]), env);
   if (proc->tag != Value::SYMBOL) {
-    throw syntax_exception{syntax_exception::UNKNOWN_FUNCTION, proc->to_string()};
+    throw syntax_exception{syntax_exception::UNKNOWN_FUNCTION,
+                           proc->to_string()};
   }
 
   // TODO define
@@ -50,16 +51,23 @@ inline ValuePtr eval_list(ValuePtr expr, EnvPtr env)
       return eval(std::move(expr->list[2]), env);
     }
   }
-
-  List tail;
-  auto arg_it = std::make_move_iterator(expr->list.begin() + 1);
-  auto arg_end = std::make_move_iterator(expr->list.end());
-  for (; arg_it != arg_end; ++arg_it) {
-    tail.push_back(eval(*arg_it, env));
+  else if (proc->symbol == "quote") {
+    if (expr->list.size() != 2) {
+      throw std::invalid_argument{"quote requires one argument"};
+    }
+    return std::move(expr->list[1]);
   }
-  ValuePtr args = std::make_unique<Value>(std::move(tail));
+  else {
+    List tail;
+    auto arg_it = std::make_move_iterator(expr->list.begin() + 1);
+    auto arg_end = std::make_move_iterator(expr->list.end());
+    for (; arg_it != arg_end; ++arg_it) {
+      tail.push_back(eval(*arg_it, env));
+    }
+    ValuePtr args = std::make_unique<Value>(std::move(tail));
 
-  return eval_fn(env, proc->symbol, std::move(args->list));
+    return eval_fn(env, proc->symbol, std::move(args->list));
+  }
 }
 
 inline ValuePtr eval_if(ValuePtr expr, EnvPtr env)
