@@ -12,11 +12,13 @@ int main(int argc, char** argv)
   EnvPtr env = std::make_unique<Env>(global_env());
   char *p;
   while ((p = readline("> ")) != NULL) {
-    // TODO try catch exceptions
     std::string expr{p};
+    try {
     std::cout << eval(parse(tokenize(expr)), env)->to_string() << std::endl;
+    } catch (const std::exception& e) {
+      std::cout << "ERROR: " << e.what() << std::endl;
+    }
     delete[] p;
-
   }
   std::cout << std::endl;
   return 0;
