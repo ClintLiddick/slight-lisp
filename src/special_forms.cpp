@@ -147,12 +147,31 @@ ValuePtr not_(List &&args)
 }
 
 // list
+ValuePtr car(List &&args)
+{
+  if (args.size() != 1 || args[0]->tag != Value::LIST) {
+    throw std::invalid_argument{"car takes one list argument"};
+  }
+  return std::move(args[0]->list.front());
+}
+
+ValuePtr cdr(List &&args)
+{
+  if (args.size() != 1 || args[0]->tag != Value::LIST) {
+    throw std::invalid_argument{"cdr takes one list argument"};
+  }
+  auto list_it = std::make_move_iterator(args[0]->list.begin() + 1);
+  auto list_end = std::make_move_iterator(args[0]->list.end());
+  List tail{list_it, list_end};
+
+
+  return std::make_unique<Value>(std::move(tail));
+}
+
 // TODO
 // ValuePtr append(List &&args);
 // ValuePtr apply(List &&args);
 // ValuePtr begin(List &&args);
-// ValuePtr car(List &&args);
-// ValuePtr cdr(List &&args);
 // ValuePtr cons(List &&args);
 // ValuePtr length(List &&args);
 // ValuePtr list(List &&args);

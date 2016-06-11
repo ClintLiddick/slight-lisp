@@ -58,3 +58,30 @@ TEST(GreaterThanTests, False)
   Value false_val{false, Value::BOOL};
   ASSERT_EQ(*gt(std::move(list)), false_val);
 }
+
+TEST(ListOperations, CarReturnsFirst)
+{
+  List list;
+  list.push_back(make_unique<Value>(1));
+  list.push_back(make_unique<Value>(2));
+  List args;
+  args.push_back(make_unique<Value>(std::move(list)));
+  Value one{1};
+  ASSERT_EQ(*car(std::move(args)), one);
+}
+
+TEST(ListOperations, CdrReturnsTail)
+{
+  List list;
+  list.push_back(make_unique<Value>(1));
+  list.push_back(make_unique<Value>(2));
+  list.push_back(make_unique<Value>(3));
+  List args;
+  args.push_back(make_unique<Value>(std::move(list)));
+
+  Value tail;
+  tail.list.push_back(make_unique<Value>(2));
+  tail.list.push_back(make_unique<Value>(3));
+
+  ASSERT_EQ(*cdr(std::move(args)), tail);
+}
