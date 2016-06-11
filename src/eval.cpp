@@ -51,7 +51,7 @@ inline ValuePtr eval_list(ValuePtr expr, EnvPtr env)
       return eval(std::move(expr->list[2]), env);
     }
   }
-  else if (proc->symbol == "quote") {
+  else if (proc->symbol == "quote" || proc->symbol == "'") {
     if (expr->list.size() != 2) {
       throw std::invalid_argument{"quote requires one argument"};
     }

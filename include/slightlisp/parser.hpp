@@ -53,18 +53,22 @@ inline bool is_zero_value(string token)
 
 ValuePtr parse_token(string token)
 {
-  Numeric n = std::atof(token.c_str());
-  if (n == 0) {
-    // determine if the value actually was zero
-    // or was just unable to be parsed
-    if (is_zero_value(token)) {
-      return std::move(std::make_unique<Value>(n));
-    } else {
-      // TODO parse #t, #f true/false
-      return std::move(std::make_unique<Value>(token));
+  if (token.at(0) == '\'') {
+    return std::move(parse_token(token.substr(1)));
+  } else {
+    Numeric n = std::atof(token.c_str());
+    if (n == 0) {
+      // determine if the value actually was zero
+      // or was just unable to be parsed
+      if (is_zero_value(token)) {
+        return std::move(std::make_unique<Value>(n));
+      } else {
+        // TODO parse #t, #f true/false
+        return std::move(std::make_unique<Value>(token));
+      }
     }
+    return std::move(std::make_unique<Value>(n));
   }
-  return std::move(std::make_unique<Value>(n));
 }
 
 ValuePtr parse(std::vector<string>& tokens)

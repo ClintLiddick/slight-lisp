@@ -165,3 +165,14 @@ TEST_F(EvalTests, QuoteList)
   list.list.push_back(std::make_unique<Value>(1));
   ASSERT_EQ(*eval(std::move(expr), env), list);
 }
+
+TEST_F(EvalTests, QuoteSymbolWithApos)
+{
+  // 'a => a
+  ValuePtr expr = std::make_unique<Value>();
+  expr->list.push_back(std::make_unique<Value>("'"));
+  expr->list.push_back(std::make_unique<Value>("a"));
+
+  Value sym{"a"};
+  ASSERT_EQ(*eval(std::move(expr), env), sym);
+}
